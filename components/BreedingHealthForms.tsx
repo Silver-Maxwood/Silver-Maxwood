@@ -69,7 +69,7 @@ export function AiServiceForm({ cows }: { cows: Cow[] }) {
         </div>
         <div>
           <label className="block text-xs font-medium text-silver-600 mb-1">Technician contact</label>
-          <input name="technician_id" type="text" placeholder="ID or phone number" className="input" />
+          <input name="technician_id" type="text" placeholder="Phone number" className="input" />
         </div>
       </div>
 
