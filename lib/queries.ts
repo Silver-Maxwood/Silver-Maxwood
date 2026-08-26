@@ -79,6 +79,18 @@ export async function getHealthRecords(): Promise<HealthRecord[]> {
   return [];
 }
 
+export async function getVaccineRecords(): Promise<any[]> {
+  if (isSupabaseConfigured) {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("vaccine_records")
+      .select("*")
+      .order("date", { ascending: false });
+    if (!error && data) return data;
+  }
+  return [];
+}
+
 export async function getExpenses(days = 30): Promise<Expense[]> {
   if (isSupabaseConfigured) {
     const supabase = createClient();

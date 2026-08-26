@@ -37,6 +37,7 @@ export type Cow = {
   sire_id: string | null;
   lactation_no: number | null;
   pregnancy_status: string | null;
+  mode_of_conception: string | null;
   status: CowStatus;
   purchase_price: number | null;
   photo_url: string | null;
