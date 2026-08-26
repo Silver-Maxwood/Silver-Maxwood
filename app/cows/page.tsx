@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Topbar } from "@/components/Topbar";
 import { AddCowForm } from "@/components/AddCowForm";
 import { StatusBadge } from "@/components/StatusBadge";
-import { getCows } from "@/lib/queries";
+import { CowDetailsModal } from "@/components/CowDetailsModal";
+import { getCows, getHealthRecords } from "@/lib/queries";
 import { formatDate } from "@/lib/utils/format";
 import type { CowStatus } from "@/types/database";
 import clsx from "clsx";
@@ -12,9 +13,9 @@ const STATUSES: (CowStatus | "ALL")[] = ["ALL", "MILKING", "DRY", "PREGNANT", "C
 export default async function CowsPage({
   searchParams,
 }: {
-  searchParams: { status?: string };
+  searchParams: { status?: string; cowId?: string };
 }) {
-  const cows = await getCows();
+  const [cows, healthRecords] = await Promise.all([getCows(), getHealthRecords()]);
   const activeStatus = (searchParams.status as CowStatus | undefined) ?? "ALL";
   const filtered = activeStatus === "ALL" ? cows : cows.filter((c) => c.status === activeStatus);
 
@@ -56,16 +57,35 @@ export default async function CowsPage({
               </tr>
             </thead>
             <tbody>
-              {filtered.map((cow) => (
-                <tr key={cow.id} className="border-b border-silver-200 last:border-0 hover:bg-silver-100/60">
-                  <td className="px-4 py-3 font-medium text-forest-900">{cow.tag_number}</td>
-                  <td className="px-4 py-3 text-silver-600">{cow.name ?? "—"}</td>
-                  <td className="px-4 py-3 text-silver-600">{cow.breed ?? "—"}</td>
-                  <td className="px-4 py-3 text-silver-600">{formatDate(cow.dob)}</td>
-                  <td className="px-4 py-3 text-silver-600">{cow.lactation_no ?? "—"}</td>
-                  <td className="px-4 py-3"><StatusBadge status={cow.status} /></td>
-                </tr>
-              ))}
+              {filtered.map((cow) => {
+                const searchStr = new URLSearchParams({
+                  ...(searchParams.status ? { status: searchParams.status } : {}),
+                  cowId: cow.id,
+                }).toString();
+                
+                return (
+                  <tr key={cow.id} className="border-b border-silver-200 last:border-0 hover:bg-silver-100/60 group">
+                    <td className="px-4 py-3 font-medium text-forest-900">
+                      <Link href={`/cows?${searchStr}`} className="block w-full">{cow.tag_number}</Link>
+                    </td>
+                    <td className="px-4 py-3 text-silver-600">
+                      <Link href={`/cows?${searchStr}`} className="block w-full">{cow.name ?? "—"}</Link>
+                    </td>
+                    <td className="px-4 py-3 text-silver-600">
+                      <Link href={`/cows?${searchStr}`} className="block w-full">{cow.breed ?? "—"}</Link>
+                    </td>
+                    <td className="px-4 py-3 text-silver-600">
+                      <Link href={`/cows?${searchStr}`} className="block w-full">{formatDate(cow.dob)}</Link>
+                    </td>
+                    <td className="px-4 py-3 text-silver-600">
+                      <Link href={`/cows?${searchStr}`} className="block w-full">{cow.lactation_no ?? "—"}</Link>
+                    </td>
+                    <td className="px-4 py-3">
+                      <Link href={`/cows?${searchStr}`} className="block w-full"><StatusBadge status={cow.status} /></Link>
+                    </td>
+                  </tr>
+                );
+              })}
               {filtered.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-4 py-10 text-center text-silver-600">
@@ -77,6 +97,8 @@ export default async function CowsPage({
           </table>
         </div>
       </div>
+      
+      <CowDetailsModal cows={cows} healthRecords={healthRecords} />
     </>
   );
 }
