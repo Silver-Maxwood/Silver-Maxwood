@@ -42,28 +42,121 @@ export function AiServiceForm({ cows }: { cows: Cow[] }) {
   return (
     <form ref={formRef} action={handleSubmit} className="card p-5 space-y-4">
       <h3 className="font-display text-lg text-forest-900">Log AI service</h3>
+
+      {/* Cow */}
       <div>
         <label className="block text-xs font-medium text-silver-600 mb-1">Cow</label>
         <CowSelect cows={cows} />
       </div>
+
+      {/* AI date & time */}
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-xs font-medium text-silver-600 mb-1">Heat date</label>
-          <input name="heat_date" type="text" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" className="input" />
-        </div>
         <div>
           <label className="block text-xs font-medium text-silver-600 mb-1">AI date</label>
           <input name="ai_date" type="text" required placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" defaultValue={todayDDMMYYYY()} className="input" />
         </div>
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">AI time</label>
+          <input name="ai_time" type="time" className="input" />
+        </div>
       </div>
+
+      {/* Heat date */}
       <div>
-        <label className="block text-xs font-medium text-silver-600 mb-1">Semen used</label>
-        <input name="semen_used" type="text" placeholder="Friesian Sexed Semen #..." className="input" />
+        <label className="block text-xs font-medium text-silver-600 mb-1">Heat date</label>
+        <input name="heat_date" type="text" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" className="input" />
       </div>
+
+      {/* Technician */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">AI technician</label>
+          <input name="technician" type="text" className="input" />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Technician ID / contact</label>
+          <input name="technician_id" type="text" placeholder="ID or phone number" className="input" />
+        </div>
+      </div>
+
+      {/* Semen details */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Semen company</label>
+          <input name="semen_company" type="text" className="input" />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Semen type</label>
+          <select name="semen_type" className="input">
+            <option value="">Select type…</option>
+            <option value="sexed">Sexed</option>
+            <option value="conventional">Conventional</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Bull details */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Bull name</label>
+          <input name="bull_name" type="text" className="input" />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Bull ID / code</label>
+          <input name="bull_id" type="text" className="input" />
+        </div>
+      </div>
+
       <div>
-        <label className="block text-xs font-medium text-silver-600 mb-1">Technician</label>
-        <input name="technician" type="text" className="input" />
+        <label className="block text-xs font-medium text-silver-600 mb-1">Breed of bull</label>
+        <input name="breed_of_bull" type="text" className="input" />
       </div>
+
+      {/* Semen batch & straw */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Semen batch / lot number</label>
+          <input name="semen_batch" type="text" className="input" />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Straw number</label>
+          <input name="straw_number" type="text" className="input" />
+        </div>
+      </div>
+
+      {/* Semen cost */}
+      <div>
+        <label className="block text-xs font-medium text-silver-600 mb-1">Semen cost</label>
+        <input name="semen_cost" type="number" min="0" step="0.01" placeholder="0.00" className="input" />
+      </div>
+
+      {/* AI service number & method */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">AI service number</label>
+          <select name="service_number" className="input">
+            <option value="">Select…</option>
+            <option value="1st">1st</option>
+            <option value="2nd">2nd</option>
+            <option value="3rd">3rd</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Method</label>
+          <select name="method" className="input">
+            <option value="">Select…</option>
+            <option value="ai">AI</option>
+            <option value="natural">Natural service</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Remarks */}
+      <div>
+        <label className="block text-xs font-medium text-silver-600 mb-1">Remarks</label>
+        <textarea name="remarks" rows={3} className="input resize-none" placeholder="Any additional notes…" />
+      </div>
+
       {error && <p className="text-sm text-alert-red">{error}</p>}
       <button
         type="submit"
