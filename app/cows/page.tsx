@@ -7,6 +7,7 @@ import { getCows, getHealthRecords, getBreedingRecords } from "@/lib/queries";
 import { formatDate } from "@/lib/utils/format";
 import type { CowStatus } from "@/types/database";
 import clsx from "clsx";
+import { Suspense } from "react";
 
 const STATUSES: (CowStatus | "ALL")[] = ["ALL", "MILKING", "DRY", "PREGNANT", "CALF", "SICK", "SOLD", "DEAD"];
 
@@ -102,7 +103,9 @@ export default async function CowsPage({
         </div>
       </div>
       
-      <CowDetailsModal cows={cows} healthRecords={healthRecords} breedingRecords={breedingRecords} />
+      <Suspense fallback={null}>
+        <CowDetailsModal cows={cows} healthRecords={healthRecords} breedingRecords={breedingRecords} />
+      </Suspense>
     </>
   );
 }

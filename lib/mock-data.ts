@@ -55,6 +55,7 @@ export function generateMockCows(count = 24): Cow[] {
     sire_id: null,
     lactation_no: Math.floor(Math.random() * 5) + 1,
     pregnancy_status: null,
+    mode_of_conception: null,
     status: pick(statuses),
     purchase_price: Math.random() > 0.7 ? rand(45000, 120000) : null,
     photo_url: null,

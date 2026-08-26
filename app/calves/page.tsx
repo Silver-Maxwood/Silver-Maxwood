@@ -6,6 +6,7 @@ import { CowDetailsModal } from "@/components/CowDetailsModal";
 import { getCows, getHealthRecords, getBreedingRecords, getVaccineRecords } from "@/lib/queries";
 import { formatDate } from "@/lib/utils/format";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "Calves — Silver Maxwood Dairies",
@@ -177,7 +178,9 @@ export default async function CalvesPage({
         </div>
       </div>
       
-      <CowDetailsModal cows={allCows} healthRecords={healthRecords} breedingRecords={breedingRecords} />
+      <Suspense fallback={null}>
+        <CowDetailsModal cows={allCows} healthRecords={healthRecords} breedingRecords={breedingRecords} />
+      </Suspense>
     </>
   );
 }

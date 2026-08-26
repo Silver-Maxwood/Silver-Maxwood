@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { logVaccine } from "@/app/treatment/actions";
 import { useFormStatus } from "react-dom";
 import type { Cow } from "@/types/database";
