@@ -73,3 +73,29 @@ export async function logHealthEvent(formData: FormData) {
   revalidatePath("/");
   return { error: null };
 }
+
+export async function updatePdResult(recordId: string, cowId: string, result: 'POSITIVE' | 'NEGATIVE') {
+  const supabase = createClient();
+  
+  // Update breeding record
+  const { error: breedingError } = await supabase
+    .from("breeding_records")
+    .update({ pd_result: result, pd_date: new Date().toISOString().slice(0, 10) })
+    .eq("id", recordId);
+
+  if (breedingError) return { error: breedingError.message };
+
+  // Update cow status
+  const newStatus = result === 'POSITIVE' ? 'PREGNANT' : 'MILKING';
+  const { error: cowError } = await supabase
+    .from("cows")
+    .update({ status: newStatus })
+    .eq("id", cowId);
+
+  if (cowError) return { error: cowError.message };
+
+  revalidatePath("/breeding");
+  revalidatePath("/cows");
+  revalidatePath("/");
+  return { error: null };
+}

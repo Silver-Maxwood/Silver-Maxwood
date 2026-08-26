@@ -3,7 +3,7 @@ import { Topbar } from "@/components/Topbar";
 import { AddCowForm } from "@/components/AddCowForm";
 import { StatusBadge } from "@/components/StatusBadge";
 import { CowDetailsModal } from "@/components/CowDetailsModal";
-import { getCows, getHealthRecords } from "@/lib/queries";
+import { getCows, getHealthRecords, getBreedingRecords } from "@/lib/queries";
 import { formatDate } from "@/lib/utils/format";
 import type { CowStatus } from "@/types/database";
 import clsx from "clsx";
@@ -15,7 +15,11 @@ export default async function CowsPage({
 }: {
   searchParams: { status?: string; cowId?: string };
 }) {
-  const [cows, healthRecords] = await Promise.all([getCows(), getHealthRecords()]);
+  const [cows, healthRecords, breedingRecords] = await Promise.all([
+    getCows(),
+    getHealthRecords(),
+    getBreedingRecords(),
+  ]);
   const activeStatus = (searchParams.status as CowStatus | undefined) ?? "ALL";
   const filtered = activeStatus === "ALL" ? cows : cows.filter((c) => c.status === activeStatus);
 
@@ -98,7 +102,7 @@ export default async function CowsPage({
         </div>
       </div>
       
-      <CowDetailsModal cows={cows} healthRecords={healthRecords} />
+      <CowDetailsModal cows={cows} healthRecords={healthRecords} breedingRecords={breedingRecords} />
     </>
   );
 }

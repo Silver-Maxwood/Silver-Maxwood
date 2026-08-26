@@ -1,5 +1,6 @@
 import { Topbar } from "@/components/Topbar";
 import { StatusBadge } from "@/components/StatusBadge";
+import { PdActionButtons } from "@/components/PdActionButtons";
 import { AiServiceForm } from "@/components/BreedingHealthForms";
 import { getCows, getBreedingRecords, getHealthRecords } from "@/lib/queries";
 import { formatDate, daysUntil } from "@/lib/utils/format";
@@ -46,7 +47,9 @@ export default async function BreedingPage() {
                         {cowMap.get(b.cow_id)?.tag_number ?? "—"}
                       </td>
                       <td className="px-4 py-3 text-silver-600">{formatDate(b.ai_date)}</td>
-                      <td className="px-4 py-3">{b.pd_result && <StatusBadge status={b.pd_result} />}</td>
+                      <td className="px-4 py-3">
+                        <PdActionButtons recordId={b.id} cowId={b.cow_id} currentResult={b.pd_result} />
+                      </td>
                       <td className="px-4 py-3 text-silver-600">{formatDate(b.expected_calving_date)}</td>
                       <td
                         className={clsx(

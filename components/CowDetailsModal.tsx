@@ -3,16 +3,17 @@
 import { X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
-import type { Cow, HealthRecord } from "@/types/database";
+import type { Cow, HealthRecord, BreedingRecord } from "@/types/database";
 import { formatDate } from "@/lib/utils/format";
 import { StatusBadge } from "@/components/StatusBadge";
 
 interface Props {
   cows: Cow[];
   healthRecords: HealthRecord[];
+  breedingRecords: BreedingRecord[];
 }
 
-export function CowDetailsModal({ cows, healthRecords }: Props) {
+export function CowDetailsModal({ cows, healthRecords, breedingRecords }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -20,6 +21,7 @@ export function CowDetailsModal({ cows, healthRecords }: Props) {
   const cowId = searchParams.get("cowId");
   const activeCow = cowId ? cows.find((c) => c.id === cowId) : null;
   const cowHealth = cowId ? healthRecords.filter((h) => h.cow_id === cowId) : [];
+  const cowBreeding = cowId ? breedingRecords.filter((b) => b.cow_id === cowId) : [];
 
   useEffect(() => {
     if (activeCow && dialogRef.current) {
@@ -127,6 +129,40 @@ export function CowDetailsModal({ cows, healthRecords }: Props) {
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          <h3 className="font-display text-lg text-forest-900 mt-8 mb-4">Breeding History</h3>
+          
+          {cowBreeding.length === 0 ? (
+            <p className="text-sm text-silver-500 italic">No breeding records found for this cow.</p>
+          ) : (
+            <div className="space-y-4">
+              {cowBreeding.map((log) => (
+                <div key={log.id} className="border border-silver-200 rounded-xl p-4 shadow-sm">
+                  <div className="flex justify-between items-start mb-3">
+                    <h4 className="font-medium text-forest-900">AI Service</h4>
+                    <span className="text-xs text-silver-500">{log.ai_date ? formatDate(log.ai_date) : 'N/A'}</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm text-silver-600 mb-3">
+                    {log.semen_used && (
+                      <div><span className="font-medium text-silver-500">Semen:</span> {log.semen_used}</div>
+                    )}
+                    {log.technician && (
+                      <div><span className="font-medium text-silver-500">Tech:</span> {log.technician}</div>
+                    )}
+                    {log.expected_calving_date && (
+                      <div className="col-span-2"><span className="font-medium text-silver-500">Expected Calving:</span> {formatDate(log.expected_calving_date)}</div>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center gap-3 pt-3 border-t border-silver-100">
+                    <span className="text-xs font-medium text-silver-500 uppercase tracking-wide">PD Result</span>
+                    {log.pd_result ? <StatusBadge status={log.pd_result} /> : <span className="text-sm">Pending</span>}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
