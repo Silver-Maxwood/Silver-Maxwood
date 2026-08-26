@@ -4,6 +4,14 @@ import { useRef, useState, useTransition } from "react";
 import { logAiService, logHealthEvent } from "@/app/breeding/actions";
 import type { Cow } from "@/types/database";
 
+function todayDDMMYYYY() {
+  const d = new Date();
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+}
+
 function CowSelect({ cows }: { cows: Cow[] }) {
   return (
     <select name="cow_id" required className="input">
@@ -41,11 +49,11 @@ export function AiServiceForm({ cows }: { cows: Cow[] }) {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-xs font-medium text-silver-600 mb-1">Heat date</label>
-          <input name="heat_date" type="date" className="input" />
+          <input name="heat_date" type="text" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" className="input" />
         </div>
         <div>
           <label className="block text-xs font-medium text-silver-600 mb-1">AI date</label>
-          <input name="ai_date" type="date" required defaultValue={new Date().toISOString().slice(0, 10)} className="input" />
+          <input name="ai_date" type="text" required placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" defaultValue={todayDDMMYYYY()} className="input" />
         </div>
       </div>
       <div>
@@ -117,7 +125,7 @@ export function HealthEventForm({ cows }: { cows: Cow[] }) {
           <input name="withdrawal_days" type="number" min="0" defaultValue={0} className="input" />
         </div>
       </div>
-      <input type="hidden" name="date" value={new Date().toISOString().slice(0, 10)} />
+      <input type="hidden" name="date" value={todayDDMMYYYY()} />
       {error && <p className="text-sm text-alert-red">{error}</p>}
       <button
         type="submit"
