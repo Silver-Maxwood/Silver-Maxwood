@@ -5,13 +5,22 @@ import { revalidatePath } from "next/cache";
 
 export async function logAiService(formData: FormData) {
   const supabase = createClient();
-  const aiDate = formData.get("ai_date") as string;
+  
+  function parseDDMMYYYY(dateStr: string | null): string | null {
+    if (!dateStr) return null;
+    const parts = dateStr.split('/');
+    if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    return dateStr;
+  }
+
+  const aiDateStr = formData.get("ai_date") as string;
+  const aiDate = parseDDMMYYYY(aiDateStr) || new Date().toISOString().slice(0, 10);
   const expected = new Date(aiDate);
   expected.setDate(expected.getDate() + 283); // ~gestation length for cattle
 
   const { error } = await supabase.from("breeding_records").insert({
     cow_id: formData.get("cow_id") as string,
-    heat_date: (formData.get("heat_date") as string) || null,
+    heat_date: parseDDMMYYYY(formData.get("heat_date") as string),
     ai_date: aiDate,
     semen_used: (formData.get("semen_used") as string) || null,
     technician: (formData.get("technician") as string) || null,
@@ -28,7 +37,16 @@ export async function logAiService(formData: FormData) {
 
 export async function logHealthEvent(formData: FormData) {
   const supabase = createClient();
-  const date = (formData.get("date") as string) || new Date().toISOString().slice(0, 10);
+
+  function parseDDMMYYYY(dateStr: string | null): string | null {
+    if (!dateStr) return null;
+    const parts = dateStr.split('/');
+    if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    return dateStr;
+  }
+
+  const dateStr = formData.get("date") as string;
+  const date = parseDDMMYYYY(dateStr) || new Date().toISOString().slice(0, 10);
   const withdrawalDays = Number(formData.get("withdrawal_days") || 0);
   let withdrawalEnd: string | null = null;
   if (withdrawalDays > 0) {
