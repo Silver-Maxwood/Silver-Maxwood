@@ -8,7 +8,7 @@ import type { Database } from "@/types/database";
  * Reads the public URL + anon key, safe to expose to the browser.
  */
 export function createClient() {
-  return createBrowserClient<Database>(
+  return createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
