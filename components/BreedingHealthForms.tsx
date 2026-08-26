@@ -204,15 +204,32 @@ export function HealthEventForm({ cows }: { cows: Cow[] }) {
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-medium text-silver-600 mb-1">Vet</label>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Vet name</label>
           <input name="vet" type="text" className="input" />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Vet contact</label>
+          <input name="vet_contact" type="text" placeholder="Phone number" className="input" />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Date of treatment</label>
+          <input
+            name="date"
+            type="text"
+            required
+            placeholder="DD/MM/YYYY"
+            pattern="\d{2}/\d{2}/\d{4}"
+            defaultValue={todayDDMMYYYY()}
+            className="input"
+          />
         </div>
         <div>
           <label className="block text-xs font-medium text-silver-600 mb-1">Withdrawal days</label>
           <input name="withdrawal_days" type="number" min="0" defaultValue={0} className="input" />
         </div>
       </div>
-      <input type="hidden" name="date" value={todayDDMMYYYY()} />
       {error && <p className="text-sm text-alert-red">{error}</p>}
       <button
         type="submit"
