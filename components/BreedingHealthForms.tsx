@@ -49,16 +49,10 @@ export function AiServiceForm({ cows }: { cows: Cow[] }) {
         <CowSelect cows={cows} />
       </div>
 
-      {/* AI date & time */}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-xs font-medium text-silver-600 mb-1">AI date</label>
-          <input name="ai_date" type="text" required placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" defaultValue={todayDDMMYYYY()} className="input" />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-silver-600 mb-1">AI time</label>
-          <input name="ai_time" type="time" className="input" />
-        </div>
+      {/* AI date */}
+      <div>
+        <label className="block text-xs font-medium text-silver-600 mb-1">AI date</label>
+        <input name="ai_date" type="text" required placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" defaultValue={todayDDMMYYYY()} className="input" />
       </div>
 
       {/* Heat date */}
