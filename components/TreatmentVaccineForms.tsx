@@ -1,16 +1,10 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useRef, useState } from "react";
 import { logVaccine } from "@/app/treatment/actions";
+import { useFormStatus } from "react-dom";
 import type { Cow } from "@/types/database";
-
-function todayDDMMYYYY() {
-  const d = new Date();
-  const dd = String(d.getDate()).padStart(2, "0");
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const yyyy = d.getFullYear();
-  return `${dd}/${mm}/${yyyy}`;
-}
+import { todayDDMMYYYY } from "@/lib/utils/format";
 
 function CowSelect({ cows }: { cows: Cow[] }) {
   return (

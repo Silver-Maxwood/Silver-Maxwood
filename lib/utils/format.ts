@@ -46,3 +46,11 @@ export function daysUntil(date: string | Date | null | undefined): number | null
   target.setHours(0, 0, 0, 0);
   return Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
+
+export function todayDDMMYYYY(): string {
+  const d = new Date();
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+}

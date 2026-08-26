@@ -2,15 +2,8 @@
 
 import { useRef, useState, useTransition } from "react";
 import { logAiService, logHealthEvent } from "@/app/breeding/actions";
+import { todayDDMMYYYY } from "@/lib/utils/format";
 import type { Cow } from "@/types/database";
-
-function todayDDMMYYYY() {
-  const d = new Date();
-  const dd = String(d.getDate()).padStart(2, "0");
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const yyyy = d.getFullYear();
-  return `${dd}/${mm}/${yyyy}`;
-}
 
 function CowSelect({ cows }: { cows: Cow[] }) {
   return (
