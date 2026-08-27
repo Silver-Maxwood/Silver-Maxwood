@@ -10,6 +10,7 @@ export async function addFarmer(formData: FormData) {
     reg_no: formData.get("reg_no") as string,
     name: formData.get("name") as string,
     phone: (formData.get("phone") as string) || null,
+    national_id: (formData.get("national_id") as string) || null,
     bank_or_mobile_money: (formData.get("bank_or_mobile_money") as string) || null,
     price_per_litre: Number(formData.get("price_per_litre") || 0),
   });
@@ -24,6 +25,7 @@ export async function logDelivery(formData: FormData) {
 
   const { error } = await supabase.from("deliveries").insert({
     date: (formData.get("date") as string) || new Date().toISOString().slice(0, 10),
+    time: (formData.get("time") as string) || new Date().toISOString().slice(11, 16),
     farmer_id: formData.get("farmer_id") as string,
     quantity: Number(formData.get("quantity") || 0),
     quality_status: qualityStatus,

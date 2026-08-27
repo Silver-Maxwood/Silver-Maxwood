@@ -29,9 +29,15 @@ export function AddFarmerForm() {
         <label className="block text-xs font-medium text-silver-600 mb-1">Name</label>
         <input name="name" type="text" required className="input" />
       </div>
-      <div>
-        <label className="block text-xs font-medium text-silver-600 mb-1">Phone</label>
-        <input name="phone" type="tel" className="input" />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Phone</label>
+          <input name="phone" type="tel" className="input" />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">National ID</label>
+          <input name="national_id" type="text" className="input" placeholder="e.g. 12345678" />
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
@@ -113,7 +119,16 @@ export function LogDeliveryForm({ farmers }: { farmers: Farmer[] }) {
           <input name="deductions" type="number" step="0.5" min="0" defaultValue={0} className="input" />
         </div>
       </div>
-      <input type="hidden" name="date" value={new Date().toISOString().slice(0, 10)} />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Date</label>
+          <input name="date" type="date" defaultValue={new Date().toISOString().slice(0, 10)} required className="input" />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-silver-600 mb-1">Time</label>
+          <input name="time" type="time" defaultValue={new Date().toISOString().slice(11, 16)} required className="input" />
+        </div>
+      </div>
       {error && <p className="text-sm text-alert-red">{error}</p>}
       <button
         type="submit"

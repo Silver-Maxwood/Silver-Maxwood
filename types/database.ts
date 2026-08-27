@@ -165,6 +165,7 @@ export type Farmer = {
   reg_no: string;
   name: string;
   phone: string | null;
+  national_id: string | null;
   bank_or_mobile_money: string | null;
   price_per_litre: number;
   created_at: string;
@@ -173,6 +174,7 @@ export type Farmer = {
 export type Delivery = {
   id: string;
   date: string;
+  time: string;
   farmer_id: string;
   quantity: number;
   quality_status: QualityStatus;

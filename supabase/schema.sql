@@ -251,6 +251,7 @@ create table farmers (
   reg_no text not null unique,
   name text not null,
   phone text,
+  national_id text,
   bank_or_mobile_money text,
   price_per_litre numeric(8,2) not null default 0,
   created_at timestamptz not null default now()
@@ -266,6 +267,7 @@ alter table milk_quality_records
 create table deliveries (
   id uuid primary key default gen_random_uuid(),
   date date not null default current_date,
+  time time not null default current_time,
   farmer_id uuid not null references farmers(id) on delete cascade,
   quantity numeric(8,2) not null,
   quality_status quality_status not null default 'ACCEPTED',
