@@ -148,8 +148,56 @@ export async function getDeliveries(days = 14): Promise<Delivery[]> {
 export async function getTodaySummary(): Promise<TodaySummary> {
   if (isSupabaseConfigured) {
     const supabase = createClient();
-    const { data, error } = await supabase.from("v_today_summary").select("*").single();
-    if (!error && data) return data as TodaySummary;
+    const today = new Date().toISOString().slice(0, 10);
+    const todayDate = new Date(today);
+    const in14DaysDate = new Date(todayDate.getTime() + 14 * 24 * 60 * 60 * 1000);
+    const in14Days = in14DaysDate.toISOString().slice(0, 10);
+
+    const [
+      { data: milkData },
+      { data: feedData },
+      { count: milkingCount },
+      { count: pregnantCount },
+      { count: totalCattle },
+      { count: dueCalvingCount },
+      { count: activeWithdrawalCount },
+    ] = await Promise.all([
+      supabase.from("milk_records").select("total_litres, total_income, is_rejected").eq("date", today),
+      supabase.from("feed_records").select("total_cost").eq("date", today),
+      supabase.from("cows").select("*", { count: "exact", head: true }).eq("status", "MILKING"),
+      supabase.from("cows").select("*", { count: "exact", head: true }).eq("status", "PREGNANT"),
+      supabase.from("cows").select("*", { count: "exact", head: true }),
+      supabase.from("breeding_records")
+        .select("*", { count: "exact", head: true })
+        .not("expected_calving_date", "is", null)
+        .lte("expected_calving_date", in14Days)
+        .is("actual_calving_date", null),
+      supabase.from("health_records")
+        .select("*", { count: "exact", head: true })
+        .not("withdrawal_end_date", "is", null)
+        .gte("withdrawal_end_date", today),
+    ]);
+
+    const todays_milk_litres = (milkData || [])
+      .filter((m: any) => !m.is_rejected)
+      .reduce((sum: number, m: any) => sum + Number(m.total_litres || 0), 0);
+    
+    const todays_milk_income = (milkData || [])
+      .reduce((sum: number, m: any) => sum + Number(m.total_income || 0), 0);
+
+    const todays_feed_cost = (feedData || [])
+      .reduce((sum: number, f: any) => sum + Number(f.total_cost || 0), 0);
+
+    return {
+      todays_milk_litres,
+      todays_milk_income,
+      todays_feed_cost,
+      milking_count: milkingCount || 0,
+      pregnant_count: pregnantCount || 0,
+      total_cattle: totalCattle || 0,
+      due_calving_count: dueCalvingCount || 0,
+      active_withdrawal_count: activeWithdrawalCount || 0,
+    };
   }
 
   return {
