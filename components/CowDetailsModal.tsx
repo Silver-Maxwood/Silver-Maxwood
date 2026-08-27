@@ -7,13 +7,16 @@ import type { Cow, HealthRecord, BreedingRecord } from "@/types/database";
 import { formatDate } from "@/lib/utils/format";
 import { StatusBadge } from "@/components/StatusBadge";
 
+import { AddGrowthForm } from "./AddGrowthForm";
+
 interface Props {
   cows: Cow[];
   healthRecords: HealthRecord[];
   breedingRecords: BreedingRecord[];
+  growthRecords?: any[]; // Allow optional for now
 }
 
-export function CowDetailsModal({ cows, healthRecords, breedingRecords }: Props) {
+export function CowDetailsModal({ cows, healthRecords, breedingRecords, growthRecords = [] }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -22,6 +25,8 @@ export function CowDetailsModal({ cows, healthRecords, breedingRecords }: Props)
   const activeCow = cowId ? cows.find((c) => c.id === cowId) : null;
   const cowHealth = cowId ? healthRecords.filter((h) => h.cow_id === cowId) : [];
   const cowBreeding = cowId ? breedingRecords.filter((b) => b.cow_id === cowId) : [];
+  const cowGrowth = cowId ? growthRecords.filter((g) => g.cow_id === cowId) : [];
+  const latestGrowth = cowGrowth.length > 0 ? cowGrowth[0] : null;
 
   useEffect(() => {
     if (activeCow && dialogRef.current) {
@@ -32,8 +37,26 @@ export function CowDetailsModal({ cows, healthRecords, breedingRecords }: Props)
   }, [activeCow]);
 
   function close() {
-    router.push("/cows", { scroll: false });
+    router.push("/cows", { scroll: false }); // Note: this navigates to /cows regardless of where they came from. For a real app, you might want router.back()
   }
+
+  const getAge = (dob: string | null) => {
+    if (!dob) return "—";
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let months = (today.getFullYear() - birthDate.getFullYear()) * 12;
+    months -= birthDate.getMonth();
+    months += today.getMonth();
+    
+    if (months < 1) {
+      const days = Math.floor((today.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24));
+      return `${Math.max(0, days)} days`;
+    }
+    const years = Math.floor(months / 12);
+    const remainingMonths = months % 12;
+    if (years > 0) return `${years}y ${remainingMonths}m`;
+    return `${months} months`;
+  };
 
   if (!activeCow) return null;
 
@@ -53,10 +76,13 @@ export function CowDetailsModal({ cows, healthRecords, breedingRecords }: Props)
             <h2 className="font-display text-2xl text-forest-900">
               {activeCow.name ? `${activeCow.tag_number} — ${activeCow.name}` : activeCow.tag_number}
             </h2>
-            <div className="flex gap-2 mt-2">
+            <div className="flex gap-2 mt-2 items-center">
               <StatusBadge status={activeCow.status} />
               <span className="bg-silver-100 text-silver-600 px-2 py-0.5 rounded-full text-xs font-medium">
                 {activeCow.breed ?? "Unknown breed"}
+              </span>
+              <span className="bg-pasture-100 text-pasture-700 px-2 py-0.5 rounded-full text-xs font-medium">
+                {getAge(activeCow.dob)}
               </span>
             </div>
           </div>
@@ -80,14 +106,37 @@ export function CowDetailsModal({ cows, healthRecords, breedingRecords }: Props)
               <p className="text-sm text-forest-900 mt-1 font-medium">{activeCow.sex}</p>
             </div>
             <div className="card p-3 bg-silver-50">
-              <p className="text-xs font-medium text-silver-500 uppercase tracking-wide">Lactation</p>
-              <p className="text-sm text-forest-900 mt-1 font-medium">{activeCow.lactation_no ?? "—"}</p>
-            </div>
-            <div className="card p-3 bg-silver-50">
               <p className="text-xs font-medium text-silver-500 uppercase tracking-wide">Source</p>
               <p className="text-sm text-forest-900 mt-1 font-medium">{activeCow.source ?? "—"}</p>
             </div>
+            <div className="card p-3 bg-silver-50">
+              <p className="text-xs font-medium text-silver-500 uppercase tracking-wide">Lactation</p>
+              <p className="text-sm text-forest-900 mt-1 font-medium">{activeCow.lactation_no ?? "—"}</p>
+            </div>
           </div>
+
+          <div className="flex items-center justify-between mb-4 mt-8">
+            <h3 className="font-display text-lg text-forest-900">Growth Progress</h3>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="border border-silver-200 rounded-xl p-4 shadow-sm bg-white">
+              <p className="text-sm text-silver-500 mb-1">Latest Weight</p>
+              <p className="text-2xl font-display text-forest-900">
+                {latestGrowth?.weight ? `${latestGrowth.weight} kg` : "—"}
+              </p>
+              {latestGrowth && <p className="text-xs text-silver-400 mt-1">Recorded {formatDate(latestGrowth.date)}</p>}
+            </div>
+            <div className="border border-silver-200 rounded-xl p-4 shadow-sm bg-white">
+              <p className="text-sm text-silver-500 mb-1">Latest Height</p>
+              <p className="text-2xl font-display text-forest-900">
+                {latestGrowth?.height ? `${latestGrowth.height} cm` : "—"}
+              </p>
+              {latestGrowth && <p className="text-xs text-silver-400 mt-1">Recorded {formatDate(latestGrowth.date)}</p>}
+            </div>
+          </div>
+
+          <AddGrowthForm cowId={activeCow.id} />
 
           <h3 className="font-display text-lg text-forest-900 mb-4">Health & Condition Logs</h3>
           

@@ -3,7 +3,7 @@ import { Topbar } from "@/components/Topbar";
 import { AddCowForm } from "@/components/AddCowForm";
 import { StatusBadge } from "@/components/StatusBadge";
 import { CowDetailsModal } from "@/components/CowDetailsModal";
-import { getCows, getHealthRecords, getBreedingRecords } from "@/lib/queries";
+import { getCows, getHealthRecords, getBreedingRecords, getGrowthRecords } from "@/lib/queries";
 import { formatDate } from "@/lib/utils/format";
 import type { CowStatus } from "@/types/database";
 import clsx from "clsx";
@@ -16,10 +16,11 @@ export default async function CowsPage({
 }: {
   searchParams: { status?: string; cowId?: string };
 }) {
-  const [cows, healthRecords, breedingRecords] = await Promise.all([
+  const [cows, healthRecords, breedingRecords, growthRecords] = await Promise.all([
     getCows(),
     getHealthRecords(),
     getBreedingRecords(),
+    getGrowthRecords(),
   ]);
   const activeStatus = (searchParams.status as CowStatus | undefined) ?? "ALL";
   const filtered = activeStatus === "ALL" ? cows : cows.filter((c) => c.status === activeStatus);
@@ -104,7 +105,7 @@ export default async function CowsPage({
       </div>
       
       <Suspense fallback={null}>
-        <CowDetailsModal cows={cows} healthRecords={healthRecords} breedingRecords={breedingRecords} />
+        <CowDetailsModal cows={cows} healthRecords={healthRecords} breedingRecords={breedingRecords} growthRecords={growthRecords} />
       </Suspense>
     </>
   );

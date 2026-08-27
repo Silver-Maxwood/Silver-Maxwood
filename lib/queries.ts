@@ -11,6 +11,7 @@ import type {
   Delivery,
   TodaySummary,
   MonthlyReportData,
+  GrowthRecord,
 } from "@/types/database";
 
 const isSupabaseConfigured =
@@ -87,6 +88,18 @@ export async function getVaccineRecords(): Promise<any[]> {
       .select("*")
       .order("date", { ascending: false });
     if (!error && data) return data;
+  }
+  return [];
+}
+
+export async function getGrowthRecords(): Promise<GrowthRecord[]> {
+  if (isSupabaseConfigured) {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("growth_records")
+      .select("*")
+      .order("date", { ascending: false });
+    if (!error && data) return data as GrowthRecord[];
   }
   return [];
 }

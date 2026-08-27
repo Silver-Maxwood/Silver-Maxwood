@@ -133,6 +133,15 @@ export type MilkQualityRecord = {
   created_at: string;
 };
 
+export type GrowthRecord = {
+  id: string;
+  cow_id: string;
+  date: string;
+  weight: number | null;
+  height: number | null;
+  created_at: string;
+};
+
 export type Expense = {
   id: string;
   date: string;
@@ -352,6 +361,20 @@ export type Database = {
             columns: ["farmer_id"];
             isOneToOne: false;
             referencedRelation: "farmers";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      growth_records: {
+        Row: GrowthRecord;
+        Insert: Partial<GrowthRecord>;
+        Update: Partial<GrowthRecord>;
+        Relationships: [
+          {
+            foreignKeyName: "growth_records_cow_id_fkey";
+            columns: ["cow_id"];
+            isOneToOne: false;
+            referencedRelation: "cows";
             referencedColumns: ["id"];
           }
         ];

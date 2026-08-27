@@ -3,7 +3,7 @@ import { AddCalfForm } from "@/components/AddCalfForm";
 import { HealthEventForm } from "@/components/BreedingHealthForms";
 import { VaccineForm } from "@/components/TreatmentVaccineForms";
 import { CowDetailsModal } from "@/components/CowDetailsModal";
-import { getCows, getHealthRecords, getBreedingRecords, getVaccineRecords } from "@/lib/queries";
+import { getCows, getHealthRecords, getBreedingRecords, getVaccineRecords, getGrowthRecords } from "@/lib/queries";
 import { formatDate } from "@/lib/utils/format";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -18,11 +18,12 @@ export default async function CalvesPage({
 }: {
   searchParams: { cowId?: string };
 }) {
-  const [allCows, healthRecords, breedingRecords, vaccineRecords] = await Promise.all([
+  const [allCows, healthRecords, breedingRecords, vaccineRecords, growthRecords] = await Promise.all([
     getCows(),
     getHealthRecords(),
     getBreedingRecords(),
     getVaccineRecords(),
+    getGrowthRecords(),
   ]);
 
   const calves = allCows.filter((c) => c.status === "CALF");
@@ -179,7 +180,7 @@ export default async function CalvesPage({
       </div>
       
       <Suspense fallback={null}>
-        <CowDetailsModal cows={allCows} healthRecords={healthRecords} breedingRecords={breedingRecords} />
+        <CowDetailsModal cows={allCows} healthRecords={healthRecords} breedingRecords={breedingRecords} growthRecords={growthRecords} />
       </Suspense>
     </>
   );
