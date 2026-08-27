@@ -203,7 +203,8 @@ export function generateMockFarmers(count = 12): Farmer[] {
     id: `mock-farmer-${i + 1}`,
     reg_no: `FRM-${String(200 + i)}`,
     name: pick(["John Kamau", "Grace Wanjiru", "Peter Mwangi", "Alice Achieng", "Samuel Kiplagat", "Mary Njeri"]),
-    phone: `07${Math.floor(10000000 + Math.random() * 89999999)}`,
+    phone: `+254 7${Math.floor(Math.random() * 90000000 + 10000000)}`,
+    national_id: `${Math.floor(Math.random() * 90000000 + 10000000)}`,
     bank_or_mobile_money: pick(["M-Pesa", "Equity Bank", "KCB", "Co-op Bank"]),
     price_per_litre: 48,
     created_at: isoDaysAgo(200),
@@ -221,6 +222,7 @@ export function generateMockDeliveries(farmers: Farmer[], days = 7): Delivery[] 
       records.push({
         id: `mock-delivery-${farmer.id}-${d}`,
         date,
+        time: "08:30:00",
         farmer_id: farmer.id,
         quantity: qty,
         quality_status: rejected ? "REJECTED" : "ACCEPTED",
