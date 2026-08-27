@@ -43,6 +43,31 @@ export async function addMilkRecord(formData: FormData) {
 
   if (error) return { error: error.message };
 
+  // Check if quality metrics are provided
+  if (formData.get("has_quality_metrics") === "on") {
+    const { error: qualityError } = await supabase.from("milk_quality_records").insert({
+      date,
+      cow_id: cowId,
+      fat: formData.get("fat") ? Number(formData.get("fat")) : null,
+      protein: formData.get("protein") ? Number(formData.get("protein")) : null,
+      snf: formData.get("snf") ? Number(formData.get("snf")) : null,
+      density: formData.get("density") ? Number(formData.get("density")) : null,
+      freezing_point: formData.get("freezing_point") ? Number(formData.get("freezing_point")) : null,
+      ph: formData.get("ph") ? Number(formData.get("ph")) : null,
+      tta: formData.get("tta") ? Number(formData.get("tta")) : null,
+      resazurin: (formData.get("resazurin") as string) || null,
+      aflatoxin: formData.get("aflatoxin") ? Number(formData.get("aflatoxin")) : null,
+      antibiotic_residue: formData.get("antibiotic_residue") === "on",
+      temp: formData.get("temp") ? Number(formData.get("temp")) : null,
+      sensory: (formData.get("sensory") as string) || null,
+      frothing: (formData.get("frothing") as any) || null,
+      peroxide: (formData.get("peroxide") as string) || null,
+      status: isRejected ? "REJECTED" : "ACCEPTED",
+    });
+
+    if (qualityError) return { error: qualityError.message };
+  }
+
   revalidatePath("/milk");
   revalidatePath("/");
   return { error: null };

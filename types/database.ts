@@ -126,6 +126,9 @@ export type MilkQualityRecord = {
   alcohol_test: PassFail | null;
   clot_on_boiling: PassFail | null;
   temp: number | null;
+  sensory: string | null;
+  frothing: PassFail | null;
+  peroxide: string | null;
   status: QualityStatus;
   created_at: string;
 };

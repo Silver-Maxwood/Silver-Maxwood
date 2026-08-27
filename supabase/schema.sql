@@ -194,6 +194,9 @@ create table milk_quality_records (
   alcohol_test pass_fail,
   clot_on_boiling pass_fail,
   temp numeric(5,2),
+  sensory text,
+  frothing pass_fail,
+  peroxide text,
   status quality_status not null default 'ACCEPTED',
   created_at timestamptz not null default now()
 );
