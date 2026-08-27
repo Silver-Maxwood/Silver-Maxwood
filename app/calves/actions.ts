@@ -34,5 +34,6 @@ export async function addCalf(formData: FormData) {
 
   revalidatePath("/calves");
   revalidatePath("/cows");
+  revalidatePath("/");
   return { error: null };
 }

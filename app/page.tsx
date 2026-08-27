@@ -6,6 +6,9 @@ import { getTodaySummary, getMilkRecords } from "@/lib/queries";
 import { formatKSh, formatLitres } from "@/lib/utils/format";
 import { Beef, Milk, Coins, TrendingUp, Baby, CalendarClock, AlertTriangle } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function DashboardPage() {
   const [summary, alerts, milkRecords] = await Promise.all([
     getTodaySummary(),
