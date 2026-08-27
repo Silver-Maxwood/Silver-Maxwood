@@ -46,7 +46,14 @@ export function AddCowForm() {
       <form ref={formRef} action={handleSubmit} className="grid sm:grid-cols-2 gap-4">
         <Field label="Tag number" name="tag_number" required placeholder="SMD-101" />
         <Field label="Name" name="name" placeholder="Malaika" />
-        <Field label="Breed" name="breed" placeholder="Friesian" />
+        <div>
+          <Label>Breed</Label>
+          <select name="breed" className="input" defaultValue="Friesian">
+            {["Friesian", "Holstein", "Ayrshire", "Guernsey", "Jersey", "Sahiwal Cross", "Crossbreed", "Other"].map((b) => (
+              <option key={b} value={b}>{b}</option>
+            ))}
+          </select>
+        </div>
         <div>
           <Label>Sex</Label>
           <select name="sex" className="input" defaultValue="FEMALE">

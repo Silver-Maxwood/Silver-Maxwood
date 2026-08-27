@@ -134,11 +134,20 @@ export function AddCalfForm({ cows }: { cows: Cow[] }) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-forest-900 mb-1">Breed</label>
-                <input
+                <select
                   name="breed"
-                  placeholder="e.g. Holstein"
-                  className="w-full px-3 py-2 border border-silver-200 rounded-lg focus:ring-2 focus:ring-forest-500 outline-none transition-shadow"
-                />
+                  className="w-full px-3 py-2 border border-silver-200 rounded-lg focus:ring-2 focus:ring-forest-500 outline-none transition-shadow bg-white"
+                >
+                  <option value="">Select breed</option>
+                  <option value="Friesian">Friesian</option>
+                  <option value="Holstein">Holstein</option>
+                  <option value="Ayrshire">Ayrshire</option>
+                  <option value="Guernsey">Guernsey</option>
+                  <option value="Jersey">Jersey</option>
+                  <option value="Sahiwal Cross">Sahiwal Cross</option>
+                  <option value="Crossbreed">Crossbreed</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium text-forest-900 mb-1">Mode of Conception</label>
