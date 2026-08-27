@@ -8,7 +8,6 @@ import type { Cow } from "@/types/database";
 export function MilkLogForm({ cows, withdrawalCowIds }: { cows: Cow[]; withdrawalCowIds: Set<string> }) {
   const [error, setError] = useState<string | null>(null);
   const [selectedCow, setSelectedCow] = useState("");
-  const [showQuality, setShowQuality] = useState(false);
   const [isPending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -82,12 +81,8 @@ export function MilkLogForm({ cows, withdrawalCowIds }: { cows: Cow[]; withdrawa
         <input name="rejection_reason" type="text" placeholder="e.g. High SCC" className="input" />
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-forest-900 mt-4 mb-2">
-        <input name="has_quality_metrics" type="checkbox" className="rounded border-silver-300" onChange={(e) => setShowQuality(e.target.checked)} />
-        <span className="font-medium">Include Quality Metrics (Optional)</span>
-      </label>
-
-      {showQuality && (
+      <div className="pt-2 border-t border-silver-200 mt-6">
+        <h4 className="font-display text-md text-forest-900 mb-4">Quality Metrics</h4>
         <div className="p-4 bg-silver-50 border border-silver-200 rounded-xl space-y-4">
            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
              <div><label className="block text-xs font-medium text-silver-600 mb-1">Receiving Temp</label><input name="temp" type="number" step="0.1" placeholder="16.4" className="input" /></div>
@@ -109,7 +104,7 @@ export function MilkLogForm({ cows, withdrawalCowIds }: { cows: Cow[]; withdrawa
              <label className="flex items-center gap-2 text-sm text-forest-900"><input name="frothing" type="checkbox" value="PASS" className="rounded border-silver-300" defaultChecked /> Frothing (Pass)</label>
            </div>
         </div>
-      )}
+      </div>
 
       <input type="hidden" name="date" value={new Date().toISOString().slice(0, 10)} />
 
