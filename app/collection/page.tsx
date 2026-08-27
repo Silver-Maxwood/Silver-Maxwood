@@ -3,6 +3,7 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { AddFarmerForm, LogDeliveryForm } from "@/components/CollectionForms";
 import { getFarmers, getDeliveries } from "@/lib/queries";
 import { formatKSh, formatLitres, formatDate } from "@/lib/utils/format";
+import { MarkDeliveryPaidButton } from "@/components/MarkDeliveryPaidButton";
 
 export default async function CollectionPage() {
   const [farmers, deliveries] = await Promise.all([getFarmers(), getDeliveries(14)]);
@@ -65,7 +66,10 @@ export default async function CollectionPage() {
                       <td className="px-4 py-3"><StatusBadge status={d.quality_status} /></td>
                       <td className="px-4 py-3 text-silver-600">{formatKSh(d.deductions)}</td>
                       <td className="px-4 py-3 font-medium text-forest-900">{formatKSh(d.net_payable)}</td>
-                      <td className="px-4 py-3"><StatusBadge status={d.payment_status} /></td>
+                      <td className="px-4 py-3 flex items-center">
+                        <StatusBadge status={d.payment_status} />
+                        {d.payment_status === "PENDING" && <MarkDeliveryPaidButton deliveryId={d.id} />}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
