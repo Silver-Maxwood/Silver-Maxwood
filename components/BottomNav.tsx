@@ -4,13 +4,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_ITEMS } from "@/lib/nav-items";
 import clsx from "clsx";
+import { LogOut } from "lucide-react";
+import { signout } from "@/app/login/actions";
 
 export function BottomNav() {
   const pathname = usePathname();
 
+  if (pathname === "/login") return null;
+
   return (
     <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-forest-950 border-t border-white/10 pb-[env(safe-area-inset-bottom)]">
-      <ul className="grid grid-cols-9">
+      <ul className="grid grid-cols-10">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
           return (
@@ -28,6 +32,15 @@ export function BottomNav() {
             </li>
           );
         })}
+        <li>
+          <button
+            onClick={() => signout()}
+            className="flex w-full h-full flex-col items-center justify-center gap-1 py-2.5 text-[10px] text-silver-400 hover:text-white"
+          >
+            <LogOut size={19} strokeWidth={2} />
+            <span className="leading-none text-center px-0.5">Logout</span>
+          </button>
+        </li>
       </ul>
     </nav>
   );

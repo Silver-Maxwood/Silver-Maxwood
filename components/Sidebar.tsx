@@ -5,9 +5,13 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { NAV_ITEMS } from "@/lib/nav-items";
 import clsx from "clsx";
+import { LogOut } from "lucide-react";
+import { signout } from "@/app/login/actions";
 
 export function Sidebar() {
   const pathname = usePathname();
+
+  if (pathname === "/login") return null;
 
   return (
     <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:shrink-0 bg-forest-950 text-white min-h-screen sticky top-0">
@@ -42,9 +46,18 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="px-5 py-4 border-t border-white/10 text-[11px] text-silver-400 leading-relaxed">
-        <p className="text-gold-500 tracking-wide">"Luxury in every drop"</p>
-        <p className="mt-1">© {new Date().getFullYear()} Silver Maxwood Dairies</p>
+      <div className="px-5 py-4 border-t border-white/10 space-y-4">
+        <button
+          onClick={() => signout()}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-silver-300 hover:bg-white/5 hover:text-white transition-colors"
+        >
+          <LogOut size={18} strokeWidth={2} />
+          Sign out
+        </button>
+        <div className="text-[11px] text-silver-400 leading-relaxed px-3">
+          <p className="text-gold-500 tracking-wide">"Luxury in every drop"</p>
+          <p className="mt-1">© {new Date().getFullYear()} Silver Maxwood Dairies</p>
+        </div>
       </div>
     </aside>
   );
