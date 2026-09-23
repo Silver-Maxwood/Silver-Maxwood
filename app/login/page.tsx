@@ -1,18 +1,16 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { login, signup } from "./actions";
+import { login } from "./actions";
 
 export default function LoginPage() {
-  const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   async function handleSubmit(formData: FormData) {
     setError(null);
     startTransition(async () => {
-      const action = isLogin ? login : signup;
-      const result = await action(formData);
+      const result = await login(formData);
       if (result?.error) {
         setError(result.error);
       }
@@ -28,7 +26,7 @@ export default function LoginPage() {
               Silver Maxwood Dairies
             </h1>
             <p className="text-silver-600">
-              {isLogin ? "Sign in to your account" : "Create a new account"}
+              Sign in to your account
             </p>
           </div>
 
@@ -42,7 +40,7 @@ export default function LoginPage() {
                 type="email"
                 required
                 className="input"
-                placeholder="farmer@example.com"
+                placeholder="admin@example.com"
               />
             </div>
 
@@ -56,7 +54,6 @@ export default function LoginPage() {
                 required
                 className="input"
                 placeholder="••••••••"
-                minLength={6}
               />
             </div>
 
@@ -71,29 +68,9 @@ export default function LoginPage() {
               disabled={isPending}
               className="w-full bg-pasture-600 hover:bg-pasture-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              {isPending
-                ? isLogin
-                  ? "Signing in..."
-                  : "Creating account..."
-                : isLogin
-                ? "Sign in"
-                : "Create account"}
+              {isPending ? "Signing in..." : "Sign in"}
             </button>
           </form>
-
-          <div className="mt-6 text-center">
-            <button
-              onClick={() => {
-                setIsLogin(!isLogin);
-                setError(null);
-              }}
-              className="text-sm text-silver-600 hover:text-forest-900 transition-colors"
-            >
-              {isLogin
-                ? "Don't have an account? Sign up"
-                : "Already have an account? Sign in"}
-            </button>
-          </div>
         </div>
       </div>
     </div>
