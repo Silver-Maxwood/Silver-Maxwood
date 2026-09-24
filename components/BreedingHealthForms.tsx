@@ -96,7 +96,12 @@ export function AiServiceForm({ cows }: { cows: Cow[] }) {
 
       <div>
         <label className="block text-xs font-medium text-silver-600 mb-1">Breed of bull</label>
-        <input name="breed_of_bull" type="text" className="input" />
+        <select name="breed_of_bull" className="input">
+          <option value="">Select breed…</option>
+          {["Friesian", "Holstein", "Ayrshire", "Guernsey", "Jersey", "Sahiwal Cross", "Crossbreed", "Other"].map((b) => (
+            <option key={b} value={b}>{b}</option>
+          ))}
+        </select>
       </div>
 
       {/* Semen batch & straw */}
