@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Topbar } from "@/components/Topbar";
 import { AddCowForm } from "@/components/AddCowForm";
 import { StatusBadge } from "@/components/StatusBadge";
+import { StatusDropdown } from "@/components/StatusDropdown";
 import { CowDetailsModal } from "@/components/CowDetailsModal";
 import { getCows, getHealthRecords, getBreedingRecords, getGrowthRecords } from "@/lib/queries";
 import { formatDate } from "@/lib/utils/format";
@@ -87,7 +88,7 @@ export default async function CowsPage({
                       <Link href={`/cows?${searchStr}`} className="block w-full">{cow.lactation_no ?? "—"}</Link>
                     </td>
                     <td className="px-4 py-3">
-                      <Link href={`/cows?${searchStr}`} className="block w-full"><StatusBadge status={cow.status} /></Link>
+                      <StatusDropdown cowId={cow.id} currentStatus={cow.status} />
                     </td>
                   </tr>
                 );

@@ -17,8 +17,8 @@ insert into auth.users (
   email_confirmed_at,
   recovery_sent_at,
   last_sign_in_at,
-  app_metadata,
-  user_metadata,
+  raw_app_meta_data,
+  raw_user_meta_data,
   created_at,
   updated_at,
   confirmation_token,
@@ -43,4 +43,4 @@ insert into auth.users (
   '',
   '',
   ''
-) ON CONFLICT (email) DO NOTHING;
+);
