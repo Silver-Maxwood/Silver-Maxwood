@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Printer } from "lucide-react";
 import type { Delivery, Farmer } from "@/types/database";
 import { formatKSh, formatDate } from "@/lib/utils/format";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -22,6 +23,48 @@ export function CollectionTables({ deliveries, farmers }: { deliveries: Delivery
       farmer.reg_no.toLowerCase().includes(query)
     );
   });
+
+  const generateReceipt = (delivery: Delivery, farmer: Farmer | undefined) => {
+    const receiptContent = `
+      <html>
+        <head>
+          <title>Receipt - Silver Maxwood Dairies</title>
+          <style>
+            body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+            h1 { text-align: center; }
+            .details { margin-top: 20px; }
+            .total { font-weight: bold; font-size: 1.2em; margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px; }
+          </style>
+        </head>
+        <body>
+          <h1>Silver Maxwood Dairies</h1>
+          <p style="text-align: center;">Milk Delivery Receipt</p>
+          <hr />
+          <div class="details">
+            <p><strong>Date:</strong> ${formatDate(delivery.date)} ${delivery.time?.slice(0, 5) || ""}</p>
+            <p><strong>Farmer:</strong> ${farmer?.name ?? "Unknown"} (Reg: ${farmer?.reg_no ?? "—"})</p>
+            <p><strong>Quantity:</strong> ${delivery.quantity} L</p>
+            <p><strong>Price/L:</strong> ${formatKSh(delivery.price_per_litre)}</p>
+            <p><strong>Deductions:</strong> ${formatKSh(delivery.deductions)}</p>
+          </div>
+          <div class="total">
+            <p>Net Paid: ${formatKSh(delivery.net_payable)}</p>
+          </div>
+          <p style="text-align: center; margin-top: 40px; font-size: 0.9em; color: #666;">Thank you for your business!</p>
+        </body>
+      </html>
+    `;
+    const printWindow = window.open("", "_blank");
+    if (printWindow) {
+      printWindow.document.write(receiptContent);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 250);
+    }
+  };
 
   return (
     <div className="lg:col-span-2 space-y-6">
@@ -67,9 +110,19 @@ export function CollectionTables({ deliveries, farmers }: { deliveries: Delivery
                   <td className="px-4 py-3"><StatusBadge status={d.quality_status} /></td>
                   <td className="px-4 py-3 text-silver-600">{formatKSh(d.deductions)}</td>
                   <td className="px-4 py-3 font-medium text-forest-900">{formatKSh(d.net_payable)}</td>
-                  <td className="px-4 py-3 flex items-center">
+                  <td className="px-4 py-3 flex items-center gap-2">
                     <StatusBadge status={d.payment_status} />
-                    {d.payment_status === "PENDING" && <MarkDeliveryPaidButton deliveryId={d.id} />}
+                    {d.payment_status === "PENDING" ? (
+                      <MarkDeliveryPaidButton deliveryId={d.id} />
+                    ) : (
+                      <button
+                        onClick={() => generateReceipt(d, farmerMap.get(d.farmer_id))}
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-pasture-600 hover:text-pasture-700 transition-colors"
+                      >
+                        <Printer className="w-3.5 h-3.5" />
+                        Receipt
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))
