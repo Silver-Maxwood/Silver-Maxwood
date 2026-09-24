@@ -5,9 +5,11 @@ import type { Delivery, Farmer } from "@/types/database";
 import { formatKSh, formatDate } from "@/lib/utils/format";
 import { StatusBadge } from "@/components/StatusBadge";
 import { MarkDeliveryPaidButton } from "@/components/MarkDeliveryPaidButton";
+import { EditFarmerModal } from "@/components/EditFarmerModal";
 
 export function CollectionTables({ deliveries, farmers }: { deliveries: Delivery[]; farmers: Farmer[] }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [editingFarmer, setEditingFarmer] = useState<Farmer | null>(null);
   const farmerMap = new Map(farmers.map((f) => [f.id, f]));
 
   const filteredDeliveries = deliveries.filter((d) => {
@@ -89,6 +91,7 @@ export function CollectionTables({ deliveries, farmers }: { deliveries: Delivery
               <th className="px-4 py-3 font-medium">Phone</th>
               <th className="px-4 py-3 font-medium">Payout method</th>
               <th className="px-4 py-3 font-medium">Price / L</th>
+              <th className="px-4 py-3 font-medium text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -100,11 +103,21 @@ export function CollectionTables({ deliveries, farmers }: { deliveries: Delivery
                 <td className="px-4 py-3 text-silver-600">{f.phone ?? "—"}</td>
                 <td className="px-4 py-3 text-silver-600">{f.bank_or_mobile_money ?? "—"}</td>
                 <td className="px-4 py-3 text-silver-600">{formatKSh(f.price_per_litre)}</td>
+                <td className="px-4 py-3 text-right">
+                  <button 
+                    onClick={() => setEditingFarmer(f)}
+                    className="text-xs font-medium text-pasture-600 hover:text-pasture-700"
+                  >
+                    Edit
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      <EditFarmerModal farmer={editingFarmer} onClose={() => setEditingFarmer(null)} />
     </div>
   );
 }

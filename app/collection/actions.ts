@@ -16,6 +16,20 @@ export async function addFarmer(formData: FormData) {
   });
   if (error) return { error: error.message };
   revalidatePath("/collection");
+}
+
+export async function updateFarmer(id: string, formData: FormData) {
+  const supabase = createClient();
+  const { error } = await supabase.from("farmers").update({
+    reg_no: formData.get("reg_no") as string,
+    name: formData.get("name") as string,
+    phone: (formData.get("phone") as string) || null,
+    national_id: (formData.get("national_id") as string) || null,
+    bank_or_mobile_money: (formData.get("bank_or_mobile_money") as string) || null,
+    price_per_litre: Number(formData.get("price_per_litre") || 0),
+  }).eq("id", id);
+  if (error) return { error: error.message };
+  revalidatePath("/collection");
   return { error: null };
 }
 
