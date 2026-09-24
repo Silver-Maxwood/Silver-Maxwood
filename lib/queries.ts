@@ -461,4 +461,17 @@ export async function getMonthlyReportData(year: number, month: number): Promise
   };
 }
 
+export async function getFeedSales() {
+  if (isSupabaseConfigured) {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("feed_sales")
+      .select("*")
+      .order("date", { ascending: false })
+      .order("created_at", { ascending: false });
+    if (!error && data) return data as any[];
+  }
+  return [];
+}
+
 export { isSupabaseConfigured };

@@ -185,6 +185,19 @@ export type Delivery = {
   created_at: string;
 };
 
+export type FeedSale = {
+  id: string;
+  date: string;
+  buyer_name: string;
+  phone_number: string | null;
+  national_id: string | null;
+  quantity_kg: number;
+  price_per_kg: number;
+  total_amount: number; // generated
+  payment_status: PaymentStatus;
+  created_at: string;
+};
+
 export type TodaySummary = {
   todays_milk_litres: number;
   todays_milk_income: number;
@@ -412,6 +425,12 @@ export type Database = {
             referencedColumns: ["id"];
           }
         ];
+      };
+      feed_sales: {
+        Row: FeedSale;
+        Insert: Partial<FeedSale>;
+        Update: Partial<FeedSale>;
+        Relationships: [];
       };
     };
     Views: {
