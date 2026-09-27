@@ -91,3 +91,11 @@ export async function markDeliveryPaid(deliveryId: string) {
   revalidatePath("/");
   return { error: null };
 }
+
+export async function deleteFarmer(id: string) {
+  const supabase = createClient();
+  const { error } = await supabase.from("farmers").delete().eq("id", id);
+  if (error) return { error: error.message };
+  revalidatePath("/collection");
+  return { error: null };
+}
