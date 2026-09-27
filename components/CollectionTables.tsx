@@ -7,6 +7,7 @@ import { formatKSh, formatDate } from "@/lib/utils/format";
 import { StatusBadge } from "@/components/StatusBadge";
 import { MarkDeliveryPaidButton } from "@/components/MarkDeliveryPaidButton";
 import { EditFarmerModal } from "@/components/EditFarmerModal";
+import { DeleteFarmerButton } from "@/components/DeleteFarmerButton";
 
 export function CollectionTables({ deliveries, farmers }: { deliveries: Delivery[]; farmers: Farmer[] }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -163,6 +164,7 @@ export function CollectionTables({ deliveries, farmers }: { deliveries: Delivery
                   >
                     Edit
                   </button>
+                  <DeleteFarmerButton farmerId={f.id} farmerName={f.name} />
                 </td>
               </tr>
             ))}
