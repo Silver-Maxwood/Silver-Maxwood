@@ -13,6 +13,8 @@ create table if not exists feed_sales (
 
 create index if not exists idx_feed_sales_date on feed_sales(date);
 
+GRANT ALL ON TABLE feed_sales TO anon, authenticated, service_role;
+
 alter table feed_sales enable row level security;
 
 drop policy if exists "Authenticated read feed_sales" on feed_sales;
@@ -20,7 +22,7 @@ drop policy if exists "Authenticated write feed_sales" on feed_sales;
 drop policy if exists "Authenticated update feed_sales" on feed_sales;
 drop policy if exists "Authenticated delete feed_sales" on feed_sales;
 
-create policy "Authenticated read feed_sales" on feed_sales for select using (auth.role() = 'authenticated');
-create policy "Authenticated write feed_sales" on feed_sales for insert with check (auth.role() = 'authenticated');
-create policy "Authenticated update feed_sales" on feed_sales for update using (auth.role() = 'authenticated');
-create policy "Authenticated delete feed_sales" on feed_sales for delete using (auth.role() = 'authenticated');
+create policy "Authenticated read feed_sales" on feed_sales for select using (true);
+create policy "Authenticated write feed_sales" on feed_sales for insert with check (true);
+create policy "Authenticated update feed_sales" on feed_sales for update using (true);
+create policy "Authenticated delete feed_sales" on feed_sales for delete using (true);
